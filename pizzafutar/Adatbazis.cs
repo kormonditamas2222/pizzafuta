@@ -56,16 +56,23 @@ namespace pizzafutar
                                 int id = reader.GetInt32("id");
                                 Pizza p = pizzak[reader.GetInt32("pizzaid")];
                                 Cim c = cimek[reader.GetInt32("cimid")];
-                                Rendeles r = new(id, p, reader.GetInt32("darab"), c, reader.GetTimeSpan("szallitas"));
-                                lista.Add(r);
+                                int db = reader.GetInt32("darab");
+                                TimeSpan t = reader.GetTimeSpan("szallitas");
+                                lista.Add(new Rendeles(id, p, db, c, t));
                             }
                         }
                     }
                 }
             }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine("Hiba történt az adatbázis elérésénél." + ex.Message);
+                Environment.Exit(0);
+            }
             catch (Exception ex)
             {
-                // Handle exception
+                Console.WriteLine("Hiba történt: " + ex.Message);
+                Environment.Exit(0);
             }
             return lista;
         }
